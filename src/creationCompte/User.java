@@ -1,6 +1,7 @@
 package creationCompte;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -29,19 +30,57 @@ public class User {
 
 	
 	
-	public boolean save() throws ClassNotFoundException, SQLException{
+	public boolean save(){
 		// This function save the user in the Table User in the DataBase.
 		boolean res = true;
+		try {
 		// Connect to the data base:
 		interfaceDB con = new interfaceDB("Base_utilisateur", "root", "Fifa2006");
-		Connection cn = con.connect();
-		Statement  dv = cn.createStatement();
+		Statement  dv = con.connect();
 		// saving the user in the table User:
 		String sql = "insert base_utilisateur.utilisateur (numero_telephone, prenom, nom, adresse_mail, mot_pass) values ('"+number.toString()+"','"+name+"','"+familyName.toUpperCase()+"','"+mail.toString()+"','"+motPass.getPassword()+"');";
-		System.out.println(sql);
 		dv.executeUpdate(sql);
+		}
+		catch (ClassNotFoundException | SQLException exp){
+			exp.printStackTrace();
+			res = false;
+		}
 		return res;
 	}
+	
+	public int connect(){
+		/*
+		 * return: positive value if The user and password are corrects, 
+		 * it return 0 if the user or password are wrong or if the user is not in the database, 
+		 * and  it return negative value if the connection to the database failed 
+		 * 
+		 */
+		int res = -1;
+		interfaceDB con = new interfaceDB("Base_utilisateur", "root", "Fifa2006");
+		ResultSet rs = null;
+		String pass = null;
+		try {
+			Statement  dv = con.connect();
+			String sql = "select mot_pass from base_utilisateur.utilisateur where numero_telephone='"+this.number+"';";
+			rs = dv.executeQuery(sql);
+			
+			while(rs.next()){
+				pass = rs.getString("mot_pass");
+			}
+			if (pass.compareTo(this.motPass.getPassword()) == 0) {
+				res = 1;
+			}
+			else{
+				res = 0;
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return res;
+		
+	}
+	
 	
 	//The Getters and Setters:
 	public String getName() {

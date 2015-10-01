@@ -3,6 +3,7 @@ package accesDonnees;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 
 public class interfaceDB {
@@ -18,9 +19,10 @@ public class interfaceDB {
 		this.database = database;
 	}
 	
-	public Connection connect() throws ClassNotFoundException, SQLException{
+	public Statement connect() throws ClassNotFoundException, SQLException{
 		Class.forName("com.mysql.jdbc.Driver");
-		return DriverManager.getConnection("jdbc:mysql://localhost:3306/"+database, user, password);
+		 Connection cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+database, user, password);
+		 return cn.createStatement();
 	}
 	
 }
