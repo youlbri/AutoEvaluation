@@ -37,14 +37,11 @@ public PhoneNumbre(Country country, String number) throws NumberFormatException 
 }
 @Override
 public String toString() {
-	/*
 	Map<Country, String> num = new HashMap<Country, String>();
 	num.putIfAbsent(Country.Maroc, "+212");
 	num.putIfAbsent(Country.France, "+33");
 	num.putIfAbsent(Country.CoteIvoire, "+211");
 	return num.get(country) + "-"+ number;
-	*/
-	return number;
 }
    
 }

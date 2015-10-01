@@ -1,9 +1,10 @@
-package creationCompte;
+package creation_compte_connection;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 
 import util.MailAddress;
 import util.Password;
@@ -18,6 +19,9 @@ public class User {
 	private PhoneNumbre number;
 	private MailAddress mail;
 	private Password motPass;
+	// TODO for now we will use this database, but later the administrator will can change the arguments.
+	interfaceDB con = new interfaceDB("Base_utilisateur", "root", "Fifa2006");
+
 
 	public User(String name, String familyName, PhoneNumbre phoneNum, MailAddress mail, Password motPass) {
 		super();
@@ -35,7 +39,6 @@ public class User {
 		boolean res = true;
 		try {
 		// Connect to the data base:
-		interfaceDB con = new interfaceDB("Base_utilisateur", "root", "Fifa2006");
 		Statement  dv = con.connect();
 		// saving the user in the table User:
 		String sql = "insert base_utilisateur.utilisateur (numero_telephone, prenom, nom, adresse_mail, mot_pass) values ('"+number.toString()+"','"+name+"','"+familyName.toUpperCase()+"','"+mail.toString()+"','"+motPass.getPassword()+"');";
@@ -56,12 +59,11 @@ public class User {
 		 * 
 		 */
 		int res = -1;
-		interfaceDB con = new interfaceDB("Base_utilisateur", "root", "Fifa2006");
 		ResultSet rs = null;
 		String pass = null;
 		try {
 			Statement  dv = con.connect();
-			String sql = "select mot_pass from base_utilisateur.utilisateur where numero_telephone='"+this.number+"';";
+			String sql = "select mot_pass from base_utilisateur.utilisateur where adresse_mail='"+this.mail.toString()+"';";
 			rs = dv.executeQuery(sql);
 			
 			while(rs.next()){
